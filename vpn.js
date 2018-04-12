@@ -1,6 +1,7 @@
 var webdriver = require('selenium-webdriver');
 var by = webdriver.By;
 var until = webdriver.until;
+let WAIT_MLS = 5000;
 
 const chromeCapabilities = webdriver.Capabilities.chrome();
 chromeCapabilities.set('chromeOptions', {args: ['--headless']});
@@ -17,24 +18,24 @@ loginBtn = driver.findElement(by.id('noGAC'));
 loginBtn.click();
 
 modeId = by.id('wan_ip_mode');
-inetSetupId = by.id('inetsetup');
 
-driver.wait(until.elementLocated(modeId), 10000).then(function(el) {
+driver.wait(until.elementLocated(modeId), WAIT_MLS).then(function(el) {
     modeElement = el;
-    driver.wait(until.elementIsVisible(modeElement), 10000).then(function() {
-        modeElement.sendKeys('pptp');
+    driver.wait(until.elementIsVisible(modeElement), WAIT_MLS).then(function() {
+        modeElement.sendKeys('dynamic');
 
         topSave = driver.findElement(by.id('topsave'));
         topSave.click();
 
-        driver.wait(until.elementLocated(inetSetupId), 10000).then(function(inetEl) {
-            inetSetupEl = inetEl;
-            driver.wait(until.elementIsVisible(inetSetupEl), 10000).then(function() {
+        menuId = by.id('menu');
+        driver.wait(until.elementLocated(menuId), WAIT_MLS).then(function(menuEl) {
+            console.log('Menu found');
+            driver.wait(until.elementIsVisible(menuEl), WAIT_MLS).then(function() {
                 console.log('Saved successfully');
                 driver.get('http://192.168.0.1/status.php');
 
                 statusText = driver.findElement(by.id('st_networkstatus'));
-                driver.wait(until.elementTextIs(statusText, 'Connected'), 10000).then(function() {
+                driver.wait(until.elementTextIs(statusText, 'Connected'), WAIT_MLS).then(function() {
                     console.log('Connected');
                     driver.quit();
                 });
