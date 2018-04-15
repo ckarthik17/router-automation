@@ -1,19 +1,21 @@
-var webdriver = require('selenium-webdriver');
-var by = webdriver.By;
-var until = webdriver.until;
-const publicIp = require('public-ip');
-const iplocate = require("node-iplocate");
+let webdriver = require('selenium-webdriver');
+let chrome = require('selenium-webdriver/chrome');
+let chromedriver = require('chromedriver');
+
+let until = webdriver.until;
+let by = webdriver.By;
 
 let WAIT_MLS = 10000;
 let PWD = '';
 let PPTP = 'pptp'
 let DHCP = 'dynamic'
 
-const chromeCapabilities = webdriver.Capabilities.chrome();
-// chromeCapabilities.set('chromeOptions', {args: ['--headless']});
+chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
 
 function setupInet(inetType) {
-    driver = new webdriver.Builder().forBrowser('chrome').withCapabilities(chromeCapabilities).build();
+    driver = new webdriver.Builder().forBrowser('chrome')
+                .setChromeOptions(new chrome.Options().headless())
+                .build();
 
     driver.manage().window().maximize();                        
     driver.get('http://192.168.0.1/bsc_wan.php');
@@ -46,7 +48,6 @@ function setupInet(inetType) {
                     driver.wait(until.elementTextIs(statusText, 'Connected'), WAIT_MLS * 2).then(function() {
                         console.log('Mode : `' + inetType + '` Connected');                    
                         driver.quit();                    
-                        ipLocation();
                     });
                 });
             });
@@ -54,17 +55,14 @@ function setupInet(inetType) {
     });    
 }
 
-function ipLocation() {
-    publicIp.v4().then(myIp => {
-        console.log("My IP address : " + myIp);
-        iplocate(myIp)
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.error(err)
-            });            
-    });
+var vpn = {};
+
+vpn.connectVPN = function() {
+    setupInet(PPTP);
 }
 
-setupInet(DHCP);
+vpn.connectDHCP = function() {
+    setupInet(DHCP);
+}
+
+module.exports = vpn;
