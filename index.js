@@ -8,7 +8,7 @@ app.get('/vpn', (req, res) => {
 });
 
 app.get('/inet', (req, res) => {
-    vpn.connectVPN();
+    vpn.connectDHCP();
     res.send('Internet connected!')
 });
 
