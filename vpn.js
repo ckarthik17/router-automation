@@ -1,6 +1,4 @@
 let webdriver = require('selenium-webdriver');
-let chrome = require('selenium-webdriver/chrome');
-let chromedriver = require('chromedriver');
 
 let until = webdriver.until;
 let by = webdriver.By;
@@ -10,11 +8,8 @@ let PWD = '';
 let PPTP = 'pptp'
 let DHCP = 'dynamic'
 
-chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build());
-
 function setupInet(inetType) {
-    driver = new webdriver.Builder().forBrowser('chrome')
-                .setChromeOptions(new chrome.Options().headless())
+    driver = new webdriver.Builder().forBrowser('firefox')
                 .build();
 
     driver.manage().window().maximize();                        
