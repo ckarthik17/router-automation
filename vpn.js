@@ -21,7 +21,8 @@ browser.on('http', function(meth, path, data) {
   console.log(' > ' + meth.magenta, path, (data || '').grey);
 });
 
-let WAIT_MLS = 10000;
+let WAIT_MLS = 20000;
+let POLL_FREQ = 1000;
 let PWD = '';
 let PPTP = 'pptp'
 let DHCP = 'dynamic'
@@ -39,7 +40,11 @@ function setupInet(inetType) {
         .waitForElementById('wan_ip_mode', asserters.isVisible)
         .type(inetType)
         .elementById('topsave')
-        // .fin(function() { return browser.quit(); })
+        .click()
+        .waitForElementById('menu', asserters.isVisible)
+        .get('http://192.168.0.1/status.php')
+        .waitForElementById('st_networkstatus', asserters.textInclude('Connected'), WAIT_MLS, POLL_FREQ)
+        .fin(function() { return browser.quit(); })
         .done();
 }
 
@@ -52,7 +57,5 @@ vpn.connectVPN = function() {
 vpn.connectDHCP = function() {
     setupInet(DHCP);
 }
-
-setupInet(DHCP);
 
 module.exports = vpn;

@@ -24,7 +24,7 @@ browser.on('http', function(meth, path, data) {
 
 /* jshint evil: true */
 browser
-  .init({browserName:'firefox'})
+  .init({browserName:'chrome'})
   .get("http://admc.io/wd/test-pages/guinea-pig.html")
   .title()
     .should.become('WD Tests')
