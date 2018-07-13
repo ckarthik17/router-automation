@@ -2,14 +2,20 @@ const express = require('express');
 const vpn = require('./vpn.js');
 const app = express();
 
-app.get('/vpn', (req, res) => {
+app.get('/vpn', async (req, res) => {
     vpn.connectVPN();
-    res.send('VPN connected!')
+    await sleep(15000);
+    res.send('VPN setting updated :: Visit to check status :: https://iplocation.com');
 });
 
-app.get('/inet', (req, res) => {
+app.get('/inet', async (req, res) => {
     vpn.connectDHCP();
-    res.send('Internet connected!')
+    await sleep(15000);
+    res.send('Normal internet setting updated :: Visit to check status :: https://iplocation.com');
 });
+
+function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+}
 
 app.listen(3000, () => console.log('App listening on port 3000!'));
