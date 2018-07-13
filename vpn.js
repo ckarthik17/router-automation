@@ -1,6 +1,12 @@
 require('colors');
-
 var wd = require('wd');
+var chai = require("chai");
+var chaiAsPromised = require("chai-as-promised");
+
+chai.use(chaiAsPromised);
+chai.should();
+chaiAsPromised.transferPromiseness = wd.transferPromiseness;
+
 var browser = wd.promiseChainRemote();
 
 // optional extra logging
@@ -20,10 +26,16 @@ let PPTP = 'pptp'
 let DHCP = 'dynamic'
 
 function setupInet(inetType) {
-    browser.init({browserName:'firefox'}).get("http://192.168.0.1/bsc_wan.php");
-    
-    browser.get("http://google.com");
-    console.log("Title is " + browser.title() + ", param : " + inetType);
+    browser.init({browserName:'firefox'})
+        .get('http://192.168.0.1/bsc_wan.php')
+        .title()
+        .should.become('D-LINK SYSTEMS, INC. | WIRELESS ROUTER | HOME')
+        .elementById('loginpwd')
+        .type(PWD)
+        .elementById('noGAC')
+        .click()
+        // .fin(function() { return browser.quit(); })
+        .done();
 }
 
 var vpn = {};
@@ -35,5 +47,7 @@ vpn.connectVPN = function() {
 vpn.connectDHCP = function() {
     setupInet(DHCP);
 }
+
+setupInet(PPTP);
 
 module.exports = vpn;
