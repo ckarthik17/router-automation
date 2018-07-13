@@ -7,6 +7,7 @@ chai.use(chaiAsPromised);
 chai.should();
 chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
+var asserters = wd.asserters;
 var browser = wd.promiseChainRemote();
 
 // optional extra logging
@@ -26,7 +27,8 @@ let PPTP = 'pptp'
 let DHCP = 'dynamic'
 
 function setupInet(inetType) {
-    browser.init({browserName:'firefox'})
+    browser.init({browserName:'chrome'})
+        .setWindowSize(1400, 1024)
         .get('http://192.168.0.1/bsc_wan.php')
         .title()
         .should.become('D-LINK SYSTEMS, INC. | WIRELESS ROUTER | HOME')
@@ -34,6 +36,9 @@ function setupInet(inetType) {
         .type(PWD)
         .elementById('noGAC')
         .click()
+        .waitForElementById('wan_ip_mode', asserters.isVisible)
+        .type(inetType)
+        .elementById('topsave')
         // .fin(function() { return browser.quit(); })
         .done();
 }
@@ -48,6 +53,6 @@ vpn.connectDHCP = function() {
     setupInet(DHCP);
 }
 
-setupInet(PPTP);
+setupInet(DHCP);
 
 module.exports = vpn;
