@@ -5,13 +5,13 @@ const app = express();
 app.get('/vpn', async (req, res) => {
     vpn.connectVPN();
     await sleep(15000);
-    res.send('VPN setting updated :: Visit to check status :: https://iplocation.com');
+    res.send('<h2>VPN setting updated</h2> </br> Visit to check status : <a href="https://iplocation.com">https://iplocation.com</a>');
 });
 
 app.get('/inet', async (req, res) => {
     vpn.connectDHCP();
     await sleep(15000);
-    res.send('Normal internet setting updated :: Visit to check status :: https://iplocation.com');
+    res.send('<h2>Normal internet setting updated</h2> </br> Visit to check status : <a href="https://iplocation.com">https://iplocation.com</a>');
 });
 
 function sleep(millis) {
