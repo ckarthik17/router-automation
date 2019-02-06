@@ -9,11 +9,13 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.get('/vpn', async (req, res) => {
     vpn.connectVPN();
+    await sleep(4000);
     res.render('vpn');
 });
 
 app.get('/inet', async (req, res) => {
     vpn.connectDHCP();
+    await sleep(4000);	
     res.render('inet');
 });
 
