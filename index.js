@@ -1,6 +1,6 @@
 const express = require('express');
 const vpn = require('./vpn.js');
-const path = require('path'); 
+const path = require('path');
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.get('/vpn', async (req, res) => {
 
 app.get('/inet', async (req, res) => {
     vpn.connectDHCP();
-    await sleep(4000);	
+    await sleep(4000);
     res.render('inet');
 });
 
